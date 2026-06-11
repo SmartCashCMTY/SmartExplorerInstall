@@ -193,16 +193,16 @@ Install Git, curl and build tools:
 sudo apt install -y git curl ca-certificates build-essential python3 make g++
 ```
 
-Install Node.js 18.x:
+Install Node.js 20.x LTS:
 
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash -
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
 sudo apt install -y nodejs
 node --version
 npm --version
 ```
 
-Node.js 18.x is used because it has been tested with the current SmartCash 3.0.0
+Node.js 20.x LTS is used because it has been tested with the current SmartCash 3.0.0
 Explorer deployment environment. TODO: Validate newer Node.js LTS versions before
 recommending them for production.
 
@@ -233,7 +233,7 @@ Download SmartCash Core 3.0.0 Linux binaries from GitHub:
 ```bash
 cd /tmp
 curl -fLO https://github.com/SmartCashCMTY/SmartNode/releases/download/v3.0.0/smartcash3-3.0.0-x86_64-linux-gnu.tar.gz
-printf '%s  %s\n' 'd05b8dcb75e88a70d8c280ffb32533bf680a4ed29a9fb3e48b3dcbad59ba6bd4' 'smartcash3-3.0.0-x86_64-linux-gnu.tar.gz' | sha256sum -c -
+printf '%s  %s\n' '5695288db0b5a475b2e2865c9b8b1c247b4494ccf7d8ac59ab6a16e0068dbd77' 'smartcash3-3.0.0-x86_64-linux-gnu.tar.gz' | sha256sum -c -
 tar -xzf smartcash3-3.0.0-x86_64-linux-gnu.tar.gz
 sudo install -m 0755 linux-x86_64/smartcashd /usr/local/bin/smartcashd
 sudo install -m 0755 linux-x86_64/smartcash-cli /usr/local/bin/smartcash-cli
@@ -766,7 +766,7 @@ No. Iquidus stores indexed chain data in MongoDB.
 
 ### 6. Can I use another Node.js version?
 
-Node.js 18.x is recommended for this guide. Other versions need separate testing.
+Node.js 20.x LTS is recommended for this guide. Other versions need separate testing.
 
 ### 7. Why is the first import slow?
 

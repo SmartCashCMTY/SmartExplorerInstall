@@ -1,43 +1,64 @@
 # SmartExplorerInstall 3.0.0
 
-Installer for the SmartCash 3.0.0 Block Explorer (Iquidus).
+SmartCash 3.0.0 Explorer Update 3.0.0 installer for Ubuntu Server 24.04 LTS.
+
+## What It Does
+- Downloads and verifies the SmartCash 3.0.0 binaries
+- Installs MongoDB, Node.js, Nginx, and Iquidus Explorer
+- Creates the explorer and daemon systemd services
+- Configures firewall, fail2ban, chrony, and swap
 
 ## Quick Start
-
 ```bash
 wget https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorerInstall/main/SmartInstallExplorer.sh
 sudo bash ./SmartInstallExplorer.sh
 ```
 
-## What It Does
+## System Requirements
+- Ubuntu Server 24.04 LTS
+- Public IPv4 address
+- 2 vCPU or better
+- 4 GB RAM minimum
+- 80 GB SSD or more
 
-- Downloads and verifies the SmartCash 3.0.0 binaries from [Node-Client-Wallet releases](https://github.com/SmartCashCMTY/Node-Client-Wallet/releases/tag/v3.0.0)
-- Installs MongoDB, Node.js 18, Nginx, and the Iquidus Explorer
-- Creates systemd services: `smartcash3.service`, `iquidus-explorer.service`
-- Configures UFW firewall (IPv6 disabled), fail2ban, chrony, swap
-- Connects to seed nodes `151.252.59.32:29678` and `151.252.59.33:29678`
-
-## Useful Commands
-
+## Installation
 ```bash
-systemctl status smartcash3 --no-pager
-systemctl status mongod --no-pager
-systemctl status iquidus-explorer --no-pager
-journalctl -u iquidus-explorer -f
+wget https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorerInstall/main/SmartInstallExplorer.sh
+sudo bash ./SmartInstallExplorer.sh
 ```
 
-## Initial Database Sync
+## Configuration
+- Explorer config: `/opt/smartcash3/explorer/settings.json`
+- SmartCash config: `/etc/smartcash3/smartcash.conf`
+- Web access: `http://YOUR_SERVER_IP/` or `http://YOUR_SERVER_IP/explorer/`
 
-```bash
-cd /opt/smartcash3/explorer
-sudo -u iquidus node scripts/sync.js index update
-sudo -u iquidus node scripts/peers.js
-```
+## Update
+- Re-run the installer after backing up config and database files
 
-## Open the Explorer
+## Backup
+- `/opt/smartcash3/explorer/settings.json`
+- `/etc/smartcash3/smartcash.conf`
+- MongoDB database dump
 
-`http://YOUR_SERVER_IP/explorer/`
+## Security
+- Keep RPC credentials private
+- Never commit secrets, seed phrases, or API keys
+
+## Credits
+Original SmartCash Project: https://github.com/smartcash
+This repository is an Update 3.0.0 based on the open-source work of the SmartCash project.
+All rights to original components, trademarks, logos, source code, and documentation remain with their respective owners.
+The original creator and relevant open-source contributors should be acknowledged appropriately.
 
 ## License
+SmartCash Core components are generally released under MIT. Iquidus Explorer and third-party components keep their own licenses.
+Please check the original project license.
 
-SmartCash Core and related projects are released under the terms of the MIT license.
+## Disclaimer
+Use at your own risk. No warranty is provided for functionality, availability, or security. No liability is accepted for direct or indirect damages, data loss, wallet loss, lost private keys, misconfiguration, network issues, blockchain issues, software bugs, or security vulnerabilities.
+
+## Cryptocurrency Risks
+Cryptocurrencies are high-risk digital assets. Losses, including total loss, are possible. Node operation and staking-related workflows may fail or behave unexpectedly. You are responsible for wallet backups, local law compliance, and tax obligations.
+
+## Legal Notice
+Use this software in accordance with the laws and regulations that apply in your jurisdiction. You are responsible for regulatory, tax, and legal compliance in your country. No legal, tax, or financial advice is provided.
