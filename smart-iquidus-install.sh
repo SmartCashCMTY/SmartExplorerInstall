@@ -37,12 +37,19 @@ EOF
 
 if ! swapon --show | grep -q '^'; then
   swapoff /swapfile 2>/dev/null || true
+  losetup -d /dev/loop0 2>/dev/null || true
   rm -f /swapfile
   dd if=/dev/zero of=/swapfile bs=1M count=4096 status=none
   chmod 600 /swapfile
   mkswap /swapfile > /dev/null
-  swapon /swapfile
-  grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' >>/etc/fstab
+  if ! swapon /swapfile 2>/dev/null; then
+    swapoff /swapfile 2>/dev/null || true
+    losetup /dev/loop0 /swapfile
+    swapon /dev/loop0
+    grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' >>/etc/fstab
+  else
+    grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' >>/etc/fstab
+  fi
 fi
 
 if ! command -v node >/dev/null 2>&1; then
