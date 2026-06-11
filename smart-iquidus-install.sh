@@ -228,7 +228,22 @@ server {
 
     client_max_body_size 16m;
 
+    location = /explorer {
+        return 301 /explorer/;
+    }
+
     location /explorer/ {
+        rewrite ^/explorer/?(.*)$ /$1 break;
+        proxy_pass http://127.0.0.1:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 120s;
+    }
+
+    location / {
         proxy_pass http://127.0.0.1:3001/;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
@@ -271,4 +286,5 @@ Useful status commands:
 
 Open the Explorer:
   http://YOUR_SERVER_IP/explorer/
+  http://YOUR_SERVER_IP/
 EOF
