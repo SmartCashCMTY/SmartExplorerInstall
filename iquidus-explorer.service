@@ -1,0 +1,23 @@
+[Unit]
+Description=SmartCash 3.0.0 Iquidus Explorer
+After=network-online.target mongod.service smartcash3.service
+Wants=network-online.target
+
+[Service]
+User=iquidus
+Group=iquidus
+WorkingDirectory=/opt/smartcash3/explorer
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=10
+TimeoutStartSec=120
+TimeoutStopSec=30
+LimitNOFILE=65536
+MemoryMax=2G
+CPUQuota=200%
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
