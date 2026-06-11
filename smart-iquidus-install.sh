@@ -36,10 +36,17 @@ APT::Periodic::AutocleanInterval "7";
 EOF
 
 if ! swapon --show | grep -q '^'; then
-  fallocate -l 4G /swapfile || dd if=/dev/zero of=/swapfile bs=1M count=4096
+  fallocate -l 4G /swapfile 2>/dev/null || true
   chmod 600 /swapfile
-  mkswap /swapfile
-  swapon /swapfile
+  mkswap /swapfile > /dev/null 2>&1 || true
+  if ! swapon /swapfile 2>/dev/null; then
+    swapoff /swapfile 2>/dev/null || true
+    rm -f /swapfile
+    dd if=/dev/zero of=/swapfile bs=1M count=4096 status=none
+    chmod 600 /swapfile
+    mkswap /swapfile > /dev/null
+    swapon /swapfile
+  fi
   grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' >>/etc/fstab
 fi
 
