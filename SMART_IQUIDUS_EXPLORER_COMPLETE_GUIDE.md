@@ -154,17 +154,22 @@ Create swap:
 ```bash
 if ! swapon --show | grep -q '^'; then
   sudo swapoff /swapfile 2>/dev/null || true
-  sudo losetup -d /dev/loop0 2>/dev/null || true
   sudo rm -f /swapfile
   sudo dd if=/dev/zero of=/swapfile bs=1M count=4096 status=none
   sudo chmod 600 /swapfile
   sudo mkswap /swapfile > /dev/null
-  if ! sudo swapon /swapfile 2>/dev/null; then
-    sudo swapoff /swapfile 2>/dev/null || true
-    sudo losetup /dev/loop0 /swapfile
-    sudo swapon /dev/loop0
+  if sudo swapon /swapfile 2>/dev/null; then
+    echo "Swap enabled"
+    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+  elif sudo modprobe loop 2>/dev/null && LOOPDEV=$(sudo losetup -f 2>/dev/null) && [ -n "$LOOPDEV" ]; then
+    sudo losetup "$LOOPDEV" /swapfile
+    sudo swapon "$LOOPDEV"
+    echo "Swap enabled via loop device"
+    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+  else
+    sudo rm -f /swapfile
+    echo "WARNING: Could not enable swap (ZFS/LXC). Continuing without."
   fi
-  echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 fi
 free -h
 ```
