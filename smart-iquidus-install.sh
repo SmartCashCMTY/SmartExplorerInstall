@@ -244,6 +244,7 @@ ln -sf /etc/nginx/sites-available/smart-iquidus-explorer /etc/nginx/sites-enable
 rm -f /etc/nginx/sites-enabled/default
 nginx -t
 
+sed -i 's/^IPV6=yes/IPV6=no/' /etc/default/ufw
 ufw allow OpenSSH
 ufw allow 80/tcp
 ufw allow 29678/tcp
