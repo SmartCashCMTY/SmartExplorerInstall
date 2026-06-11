@@ -153,17 +153,12 @@ Create swap:
 
 ```bash
 if ! swapon --show | grep -q '^'; then
-  sudo fallocate -l 4G /swapfile 2>/dev/null || true
+  sudo swapoff /swapfile 2>/dev/null || true
+  sudo rm -f /swapfile
+  sudo dd if=/dev/zero of=/swapfile bs=1M count=4096 status=none
   sudo chmod 600 /swapfile
-  sudo mkswap /swapfile > /dev/null 2>&1 || true
-  if ! sudo swapon /swapfile 2>/dev/null; then
-    sudo swapoff /swapfile 2>/dev/null || true
-    sudo rm -f /swapfile
-    sudo dd if=/dev/zero of=/swapfile bs=1M count=4096 status=none
-    sudo chmod 600 /swapfile
-    sudo mkswap /swapfile > /dev/null
-    sudo swapon /swapfile
-  fi
+  sudo mkswap /swapfile > /dev/null
+  sudo swapon /swapfile
   echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 fi
 free -h
