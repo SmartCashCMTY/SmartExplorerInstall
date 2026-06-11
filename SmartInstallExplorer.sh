@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-EXPLORER_INSTALL_URL="https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/smart-iquidus-install.sh"
+EXPLORER_INSTALL_URL="https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorerInstall/main/smart-iquidus-install.sh"
 
 if [[ $EUID -ne 0 ]]; then
   echo "Please run as root: sudo bash ./SmartInstallExplorer.sh" >&2
