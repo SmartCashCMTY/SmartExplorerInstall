@@ -17,10 +17,14 @@ sudo bash ./SmartInstallExplorer.sh
 ## System Requirements
 - Ubuntu Server 24.04 LTS
 - Public IPv4 address
-- 2 vCPU or better
-- 4 GB RAM minimum
-- 80 GB SSD or more
+- 2 vCPU
+- 2 GB RAM or better
+- 30 GB SSD or more
 
+## Hardware Requirements
+- VPS or dedicated server with static public IPv4
+- Open inbound ports as required by the installer
+- Stable internet connection
 ## Installation
 ```bash
 wget https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorerInstall/main/SmartInstallExplorer.sh
