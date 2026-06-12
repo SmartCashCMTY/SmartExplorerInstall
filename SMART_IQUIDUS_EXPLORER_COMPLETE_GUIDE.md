@@ -233,7 +233,7 @@ Download SmartCash Core 3.0.0 Linux binaries from GitHub:
 ```bash
 cd /tmp
 curl -fLO https://github.com/SmartCashCMTY/SmartNode/releases/download/v3.0.0/smartcash3-3.0.0-x86_64-linux-gnu.tar.gz
-printf '%s  %s\n' '5695288db0b5a475b2e2865c9b8b1c247b4494ccf7d8ac59ab6a16e0068dbd77' 'smartcash3-3.0.0-x86_64-linux-gnu.tar.gz' | sha256sum -c -
+printf '%s  %s\n' '458469a13f4f7cdde94c509f15e0306079ae39a2c5f34dc63d14dff88ece36a2' 'smartcash3-3.0.0-x86_64-linux-gnu.tar.gz' | sha256sum -c -
 tar -xzf smartcash3-3.0.0-x86_64-linux-gnu.tar.gz
 sudo install -m 0755 linux-x86_64/smartcashd /usr/local/bin/smartcashd
 sudo install -m 0755 linux-x86_64/smartcash-cli /usr/local/bin/smartcash-cli
