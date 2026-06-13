@@ -429,14 +429,13 @@ cat <<'EOF'
 
 Installation finished.
 
-IMPORTANT — Initial sync required:
-  The Explorer database is currently empty. Run the initial sync command:
+Starting initial blockchain index sync in the background.
+This may take 24-48 hours for ~4.2 million blocks.
+The Explorer shows live data once the sync completes.
 
+Progress commands:
   cd /opt/smartcash3/explorer
-  sudo -u iquidus node scripts/sync.js index update
-
-  This builds the full blockchain index (~4.2 million blocks, 24-48 hours).
-  After completion, the tip-sync timer keeps the Explorer updated automatically.
+  sudo -u iquidus node -e "require('mongodb').MongoClient.connect('mongodb://127.0.0.1:27017/smartcash3',(e,c)=>{c.db().collection('txes').countDocuments().then(n=>{console.log('Transactions indexed:',n);c.close()})})"
 
 Useful status commands:
   systemctl status smartcash3 --no-pager
@@ -446,12 +445,11 @@ Useful status commands:
   journalctl -u iquidus-explorer -f
   tail -f /var/lib/smartcash3/debug.log
 
-After initial sync completes, open the Explorer:
+Open the Explorer:
   http://YOUR_SERVER_IP/
   http://YOUR_SERVER_IP/explorer/
-
-Configuration:
-  Explorer settings:  /opt/smartcash3/explorer/settings.json
-  SmartCash config:   /etc/smartcash3/smartcash.conf
-  Web access log:     journalctl -u iquidus-explorer -f
 EOF
+
+echo "Starting initial database sync (runs in background)..."
+sudo -u "$EXPLORER_USER" node "$EXPLORER_DIR/scripts/sync.js" index update > /tmp/smartcash3-explorer-sync.log 2>&1 &
+echo "Sync PID: $!"
