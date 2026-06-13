@@ -4,7 +4,7 @@ set -euo pipefail
 SMARTCASH_VERSION="3.0.0"
 CORE_RELEASE_BASE="https://github.com/SmartCashCMTY/Node-Client-Wallet/releases/download/v3.0.0"
 CORE_ARCHIVE="smartcash3-3.0.0-x86_64-linux-gnu.tar.gz"
-CORE_SHA256="458469a13f4f7cdde94c509f15e0306079ae39a2c5f34dc63d14dff88ece36a2"
+CORE_SHA256="d53c8195768490808c88d178cfb387102b8e69ab452e4c7baddf9af5c44993eb"
 EXPLORER_REPO="https://github.com/iquidus/explorer.git"
 INSTALL_ROOT="/opt/smartcash3"
 EXPLORER_DIR="/opt/smartcash3/explorer"
