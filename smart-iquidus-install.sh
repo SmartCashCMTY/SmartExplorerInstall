@@ -331,6 +331,16 @@ server {
         proxy_read_timeout 120s;
     }
 
+    location = /favicon.ico {
+        proxy_pass http://127.0.0.1:3001/images/logo.png;
+        proxy_set_header Host \$host;
+    }
+
+    location = /explorer/favicon.ico {
+        proxy_pass http://127.0.0.1:3001/images/logo.png;
+        proxy_set_header Host \$host;
+    }
+
     location = /explorer {
         return 301 /explorer/;
     }
