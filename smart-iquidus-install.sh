@@ -172,6 +172,37 @@ if os.path.exists(layout):
     print('Layout updated: favicon + smartnodes + richlist removed')
 PYEOF
 
+echo "Adding SmartNodes support..."
+curl -fsSL -o views/smartnodes.pug https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/views/smartnodes.pug 2>/dev/null || true
+
+python3 << 'PYEOF2'
+import os
+routes = 'routes/index.js'
+lib_path = 'lib/explorer.js'
+if os.path.exists(routes):
+    with open(routes) as f:
+        r = f.read()
+    if 'smartnodes' not in r:
+        smartroute = ("router.get('/smartnodes', function(req, res) {\n"
+            "  lib.get_smartnodes(function(smartnodes) {\n"
+            "    res.render('smartnodes', {active: 'smartnodes', smartnodes: smartnodes});\n"
+            "  });\n"
+            "});\n\n")
+        r = r.replace("router.get('/ext/summary'", smartroute + "router.get('/ext/summary'")
+        with open(routes, 'w') as f:
+            f.write(r)
+        print('SmartNodes route added')
+if os.path.exists(lib_path):
+    with open(lib_path) as f:
+        l = f.read()
+    if 'get_smartnodes' not in l:
+        func = '  get_smartnodes: function(cb) {\n    rpcCommand([{method:\"smartnode\", parameters: [\"list\", \"full\"]}], function(response) {\n      var smartnodes = [];\n      if (!response || response == \"There was an error. Check your console.\") return cb(smartnodes);\n      Object.keys(response).forEach(function(k) {\n        var f = String(response[k]).trim().split(/\\\\s+/);\n        smartnodes.push({outpoint:k, status:f[0]||\"\", protocol:f[1]||\"\", payee:f[2]||\"\", lastSeen:parseInt(f[3])||0, activeSeconds:parseInt(f[4])||0, lastPaidTime:parseInt(f[5])||0, lastPaidBlock:parseInt(f[6])||0, address:f[7]||\"\"});\n      });\n      cb(smartnodes);\n    });\n  },\n'
+        l = l.replace('};', func + '};')
+        with open(lib_path, 'w') as f:
+            f.write(l)
+        print('SmartNodes lib added')
+PYEOF2
+
 cat >settings.json <<EOF
 {
   "title": "SmartCash 3.0 Explorer",
