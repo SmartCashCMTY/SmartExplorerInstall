@@ -150,15 +150,22 @@ curl -fsSL -o public/images/logo.png https://raw.githubusercontent.com/SmartCash
 echo "Updating explorer layout..."
 python3 << 'PYEOF'
 import re, os
-# Remove richlist nav item
 layout = 'views/layout.pug'
 if os.path.exists(layout):
     with open(layout) as f:
-        c = f.read()
+        lines = f.readlines()
+    for i, line in enumerate(lines):
+        if line.strip() == 'head':
+            if 'rel="icon"' not in lines[i+1]:
+                lines.insert(i+1, '    link(rel="icon", type="image/png", href="/images/logo.png")\n')
+                lines.insert(i+2, '    link(rel="shortcut icon", type="image/png", href="/images/logo.png")\n')
+            break
+    # Remove richlist nav item
+    c = ''.join(lines)
     c = re.sub(r'[ \t]*li#richlist.*?span.menu-text.*?\n', '', c, flags=re.DOTALL)
     with open(layout, 'w') as f:
         f.write(c)
-    print('Richlist navigation removed')
+    print('Layout updated: favicon + richlist removed')
 PYEOF
 
 cat >settings.json <<EOF
