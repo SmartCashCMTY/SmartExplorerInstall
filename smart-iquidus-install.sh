@@ -163,9 +163,13 @@ if os.path.exists(layout):
     # Remove richlist nav item
     c = ''.join(lines)
     c = re.sub(r'[ \t]*li#richlist.*?span.menu-text.*?\n', '', c, flags=re.DOTALL)
+    if 'li#smartnodes' not in c:
+        network_block = '          if settings.display.network == true\n'
+        smartnodes_block = '          if settings.display.smartnodes == true\n            li#smartnodes\n              a.nav-link(href=\"/smartnodes\")\n                span.fa.fa-server\n                span.menu-text SmartNodes\n'
+        c = c.replace(network_block, smartnodes_block + network_block)
     with open(layout, 'w') as f:
         f.write(c)
-    print('Layout updated: favicon + richlist removed')
+    print('Layout updated: favicon + smartnodes + richlist removed')
 PYEOF
 
 cat >settings.json <<EOF
@@ -195,6 +199,7 @@ cat >settings.json <<EOF
     "api": true,
     "markets": false,
     "richlist": false,
+    "smartnodes": true,
     "movement": true,
     "network": true
   },
