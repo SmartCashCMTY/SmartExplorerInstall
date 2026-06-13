@@ -144,13 +144,30 @@ fi
 cd "$EXPLORER_DIR"
 npm install --production
 
+echo "Downloading SmartCash logo..."
+curl -fsSL -o public/images/logo.png https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/public/images/logo.png 2>/dev/null || true
+
+echo "Updating explorer layout..."
+python3 << 'PYEOF'
+import re, os
+# Remove richlist nav item
+layout = 'views/layout.pug'
+if os.path.exists(layout):
+    with open(layout) as f:
+        c = f.read()
+    c = re.sub(r'[ \t]*li#richlist.*?span.menu-text.*?\n', '', c, flags=re.DOTALL)
+    with open(layout, 'w') as f:
+        f.write(c)
+    print('Richlist navigation removed')
+PYEOF
+
 cat >settings.json <<EOF
 {
   "title": "SmartCash 3.0 Explorer",
   "address": "127.0.0.1:3001",
   "coin": "SmartCash",
   "symbol": "SMART",
-  "theme": "Cerulean",
+  "theme": "Cyborg",
   "port": 3001,
   "dbsettings": {
     "user": "",
@@ -170,12 +187,13 @@ cat >settings.json <<EOF
   "display": {
     "api": true,
     "markets": false,
-    "richlist": true,
+    "richlist": false,
     "movement": true,
     "network": true
   },
   "index": {
     "show_hashrate": true,
+    "show_smartcash_price": true,
     "show_market_cap": false,
     "show_market_cap_over_price": false,
     "difficulty": "POW",
@@ -221,12 +239,97 @@ NoNewPrivileges=true
 WantedBy=multi-user.target
 EOF
 
+cat >/etc/systemd/system/smartcash3-explorer-tip-sync.service <<'EOF'
+[Unit]
+Description=SmartCash 3.0 Explorer tip sync
+After=mongod.service smartcash3.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/smartcash3/explorer
+ExecStart=/usr/bin/node scripts/sync-tip.js 250
+TimeoutStartSec=5min
+EOF
+
+cat >/etc/systemd/system/smartcash3-explorer-tip-sync.timer <<'EOF'
+[Unit]
+Description=Run SmartCash 3.0 Explorer tip sync
+After=mongod.service smartcash3.service
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=60s
+AccuracySec=1s
+Unit=smartcash3-explorer-tip-sync.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl enable smartcash3-explorer-tip-sync.timer
+systemctl start smartcash3-explorer-tip-sync.timer 2>/dev/null || true
+
+# CMC API endpoint
+cat >/opt/smartcash3/cmc-api.js <<'CMCEOF'
+const http = require('http');
+const exec = require('child_process').exec;
+const CLI = '/usr/local/bin/smartcash-cli';
+let cache = null, cacheTime = 0;
+
+function getSupply(cb) {
+  if (cache && (Date.now() - cacheTime) < 300000) return cb(cache);
+  exec(CLI + ' -conf=/etc/smartcash3/smartcash.conf -datadir=/var/lib/smartcash3 gettxoutsetinfo 2>/dev/null', {timeout: 120000}, (e, stdout) => {
+    let supply = 3167797400;
+    try {
+      const d = JSON.parse(stdout);
+      supply = Math.floor(d.total_amount);
+    } catch(ex) {}
+    cache = supply;
+    cacheTime = Date.now();
+    cb(supply);
+  });
+}
+
+http.createServer((req, res) => {
+  if (req.url === '/cmc' || req.url === '/') {
+    getSupply(function(supply) {
+      res.writeHead(200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'});
+      res.end(JSON.stringify({circulating_supply: supply, total_supply: supply, max_supply: 5000000000}) + '\n');
+    });
+  } else { res.writeHead(404); res.end('Not Found\n'); }
+}).listen(3002, () => console.log('CMC API on :3002'));
+CMCEOF
+
+cat >/etc/systemd/system/smartcash3-cmc-api.service <<'EOF'
+[Unit]
+Description=SmartCash CMC API
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /opt/smartcash3/cmc-api.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable smartcash3-cmc-api
+systemctl start smartcash3-cmc-api 2>/dev/null || true
+
 cat >/etc/nginx/sites-available/smart-iquidus-explorer <<'EOF'
 server {
     listen 80;
     server_name _;
 
     client_max_body_size 16m;
+
+    location = /cmc {
+        proxy_pass http://127.0.0.1:3002/cmc;
+        proxy_http_version 1.1;
+        proxy_read_timeout 120s;
+    }
 
     location = /explorer {
         return 301 /explorer/;
@@ -273,18 +376,29 @@ cat <<'EOF'
 
 Installation finished.
 
-Initial Explorer database sync commands:
+IMPORTANT — Initial sync required:
+  The Explorer database is currently empty. Run the initial sync command:
+
   cd /opt/smartcash3/explorer
   sudo -u iquidus node scripts/sync.js index update
-  sudo -u iquidus node scripts/peers.js
+
+  This builds the full blockchain index (~4.2 million blocks, 24-48 hours).
+  After completion, the tip-sync timer keeps the Explorer updated automatically.
 
 Useful status commands:
   systemctl status smartcash3 --no-pager
   systemctl status mongod --no-pager
   systemctl status iquidus-explorer --no-pager
+  systemctl status smartcash3-explorer-tip-sync.timer --no-pager
   journalctl -u iquidus-explorer -f
+  tail -f /var/lib/smartcash3/debug.log
 
-Open the Explorer:
-  http://YOUR_SERVER_IP/explorer/
+After initial sync completes, open the Explorer:
   http://YOUR_SERVER_IP/
+  http://YOUR_SERVER_IP/explorer/
+
+Configuration:
+  Explorer settings:  /opt/smartcash3/explorer/settings.json
+  SmartCash config:   /etc/smartcash3/smartcash.conf
+  Web access log:     journalctl -u iquidus-explorer -f
 EOF
