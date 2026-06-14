@@ -428,5 +428,6 @@ Open the Explorer:
 EOF
 
 echo "Starting initial database sync (runs in background)..."
-sudo -u "$EXPLORER_USER" node "$EXPLORER_DIR/scripts/sync.js" index update > /tmp/smartcash3-explorer-sync.log 2>&1 &
+cd "$EXPLORER_DIR"
+sudo -u "$EXPLORER_USER" node scripts/sync.js index update > /tmp/smartcash3-explorer-sync.log 2>&1 &
 echo "Sync PID: $!"
