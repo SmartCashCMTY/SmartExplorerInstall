@@ -404,4 +404,7 @@ EOF
 echo "Starting initial database sync (runs in background)..."
 cd "$EXPLORER_DIR"
 sudo -u "$EXPLORER_USER" node scripts/sync.js index update > /tmp/smartcash3-explorer-sync.log 2>&1 &
+
+echo "Triggering first tip-sync for immediate data..."
+systemctl start smartcash3-explorer-tip-sync.service 2>/dev/null || true
 echo "Sync PID: $!"
