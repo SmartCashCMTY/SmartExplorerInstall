@@ -147,37 +147,11 @@ npm install --production
 echo "Downloading SmartCash logo..."
 curl -fsSL -o public/images/logo.png https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/public/images/logo.png 2>/dev/null || true
 
-echo "Updating explorer layout..."
-python3 << 'PYEOF'
-import re, os
-layout = 'views/layout.pug'
-if os.path.exists(layout):
-    with open(layout) as f:
-        lines = f.readlines()
-    for i, line in enumerate(lines):
-        if line.strip() == 'head':
-            if 'rel="icon"' not in lines[i+1]:
-                lines.insert(i+1, '    link(rel="icon", type="image/png", href="/images/logo.png")\n')
-                lines.insert(i+2, '    link(rel="shortcut icon", type="image/png", href="/images/logo.png")\n')
-            break
-    c = ''.join(lines)
-    # Remove richlist nav item
-    c = re.sub(r'[ \t]*li#richlist.*?span.menu-text.*?\n', '', c, flags=re.DOTALL)
-    # Change "USD Price" to "SMART Price"
-    c = c.replace('toFixed(2);', 'toFixed(8);')
-    c = c.replace('#{settings.markets.exchange} Price', 'SMART Price')
-    # Add smartnodes before network
-    if 'li#smartnodes' not in c:
-        network_block = '          if settings.display.network == true\n'
-        smartnodes_block = '          if settings.display.smartnodes == true\n            li#smartnodes\n              a.nav-link(href="/smartnodes")\n                span.fa.fa-server\n                span.menu-text SmartNodes\n'
-        c = c.replace(network_block, smartnodes_block + network_block)
-    with open(layout, 'w') as f:
-        f.write(c)
-    print('Layout updated')
-PYEOF
-
-echo "Adding SmartNodes support..."
+echo "Downloading custom layout, lib, routes and SmartNodes files..."
+curl -fsSL -o views/layout.pug https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/views/layout.pug 2>/dev/null || true
 curl -fsSL -o views/smartnodes.pug https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/views/smartnodes.pug 2>/dev/null || true
+curl -fsSL -o lib/explorer.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/lib/explorer.js 2>/dev/null || true
+curl -fsSL -o routes/index.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/routes/index.js 2>/dev/null || true
 
 
 cat >settings.json <<EOF
