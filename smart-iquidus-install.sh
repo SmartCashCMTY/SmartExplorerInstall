@@ -160,16 +160,19 @@ if os.path.exists(layout):
                 lines.insert(i+1, '    link(rel="icon", type="image/png", href="/images/logo.png")\n')
                 lines.insert(i+2, '    link(rel="shortcut icon", type="image/png", href="/images/logo.png")\n')
             break
-    # Remove richlist nav item
     c = ''.join(lines)
+    # Remove richlist nav item
     c = re.sub(r'[ \t]*li#richlist.*?span.menu-text.*?\n', '', c, flags=re.DOTALL)
+    # Change "USD Price" to "SMART Price"
+    c = c.replace('#{settings.markets.exchange} Price', 'SMART Price')
+    # Add smartnodes before network
     if 'li#smartnodes' not in c:
         network_block = '          if settings.display.network == true\n'
-        smartnodes_block = '          if settings.display.smartnodes == true\n            li#smartnodes\n              a.nav-link(href=\"/smartnodes\")\n                span.fa.fa-server\n                span.menu-text SmartNodes\n'
+        smartnodes_block = '          if settings.display.smartnodes == true\n            li#smartnodes\n              a.nav-link(href="/smartnodes")\n                span.fa.fa-server\n                span.menu-text SmartNodes\n'
         c = c.replace(network_block, smartnodes_block + network_block)
     with open(layout, 'w') as f:
         f.write(c)
-    print('Layout updated: favicon + smartnodes + richlist removed')
+    print('Layout updated')
 PYEOF
 
 echo "Adding SmartNodes support..."
