@@ -164,6 +164,7 @@ if os.path.exists(layout):
     # Remove richlist nav item
     c = re.sub(r'[ \t]*li#richlist.*?span.menu-text.*?\n', '', c, flags=re.DOTALL)
     # Change "USD Price" to "SMART Price"
+    c = c.replace('toFixed(2);', 'toFixed(8);')
     c = c.replace('#{settings.markets.exchange} Price', 'SMART Price')
     # Add smartnodes before network
     if 'li#smartnodes' not in c:
