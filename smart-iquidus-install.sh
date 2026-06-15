@@ -401,6 +401,7 @@ Open the Explorer:
   http://YOUR_SERVER_IP/explorer/
 EOF
 
+curl -fsSL -o scripts/sync-tip.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/sync-tip.js 2>/dev/null || true
 echo "Seeding initial coin supply (retries until ready)..."
 curl -fsSL -o /tmp/seed-supply.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/seed-supply.js 2>/dev/null
 cd "$EXPLORER_DIR"
