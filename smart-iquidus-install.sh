@@ -326,13 +326,13 @@ server {
     }
 
     location = /favicon.ico {
-        proxy_pass http://127.0.0.1:3001/images/logo.png;
-        proxy_set_header Host \$host;
+        alias /opt/smartcash3/explorer/public/images/logo.png;
+        add_header Content-Type image/png;
     }
 
     location = /explorer/favicon.ico {
-        proxy_pass http://127.0.0.1:3001/images/logo.png;
-        proxy_set_header Host \$host;
+        alias /opt/smartcash3/explorer/public/images/logo.png;
+        add_header Content-Type image/png;
     }
 
     location = /explorer {
