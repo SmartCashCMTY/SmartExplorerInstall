@@ -411,6 +411,9 @@ SEED_PID=$!
 echo "Indexing last 500 blocks for immediate data..."
 sudo -u "$EXPLORER_USER" node scripts/sync-tip.js 500 > /tmp/sync-tip-init.log 2>&1
 
+echo "Populating peer data..."
+sudo -u "$EXPLORER_USER" node scripts/peers.js > /tmp/peers-init.log 2>&1
+
 echo "Starting full blockchain index sync (background)..."
 sudo -u "$EXPLORER_USER" node scripts/sync.js index update > /tmp/smartcash3-explorer-sync.log 2>&1 &
 
