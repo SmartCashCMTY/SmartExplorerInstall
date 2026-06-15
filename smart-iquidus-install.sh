@@ -407,4 +407,8 @@ sudo -u "$EXPLORER_USER" node scripts/sync.js index update > /tmp/smartcash3-exp
 
 echo "Triggering first tip-sync for immediate data..."
 systemctl start smartcash3-explorer-tip-sync.service 2>/dev/null || true
+
+echo "Seeding initial coin supply..."
+curl -fsSL -o /tmp/seed-supply.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/seed-supply.js 2>/dev/null
+cd "$EXPLORER_DIR" && node /tmp/seed-supply.js 2>/dev/null || true
 echo "Sync PID: $!"
