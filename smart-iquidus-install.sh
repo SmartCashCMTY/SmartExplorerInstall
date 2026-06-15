@@ -146,6 +146,7 @@ npm install --production
 
 echo "Downloading SmartCash logo..."
 curl -fsSL -o public/images/logo.png https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/public/images/logo.png 2>/dev/null || true
+curl -fsSL -o public/favicon.ico https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/public/favicon.ico 2>/dev/null || true
 
 echo "Downloading custom layout, lib, routes and SmartNodes files..."
 curl -fsSL -o views/layout.pug https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/views/layout.pug 2>/dev/null || true
