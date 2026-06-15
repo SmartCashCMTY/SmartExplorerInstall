@@ -401,14 +401,20 @@ Open the Explorer:
   http://YOUR_SERVER_IP/explorer/
 EOF
 
-echo "Starting initial database sync (runs in background)..."
+echo "Seeding initial coin supply (retries until ready)..."
+curl -fsSL -o /tmp/seed-supply.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/seed-supply.js 2>/dev/null
 cd "$EXPLORER_DIR"
+node /tmp/seed-supply.js > /tmp/seed-supply.log 2>&1 &
+SEED_PID=$!
+
+echo "Indexing last 500 blocks for immediate data..."
+sudo -u "$EXPLORER_USER" node scripts/sync-tip.js 500 > /tmp/sync-tip-init.log 2>&1
+
+echo "Starting full blockchain index sync (background)..."
 sudo -u "$EXPLORER_USER" node scripts/sync.js index update > /tmp/smartcash3-explorer-sync.log 2>&1 &
 
-echo "Triggering first tip-sync for immediate data..."
-systemctl start smartcash3-explorer-tip-sync.service 2>/dev/null || true
+wait $SEED_PID 2>/dev/null
+echo "Seed supply result:"
+cat /tmp/seed-supply.log 2>/dev/null
 
-echo "Seeding initial coin supply..."
-curl -fsSL -o /tmp/seed-supply.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/seed-supply.js 2>/dev/null
-cd "$EXPLORER_DIR" && node /tmp/seed-supply.js 2>/dev/null || true
-echo "Sync PID: $!"
+echo "Installation complete. Explorer shows data as sync progresses."
