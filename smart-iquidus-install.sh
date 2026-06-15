@@ -163,6 +163,7 @@ cat >settings.json <<EOF
   "symbol": "SMART",
   "theme": "Cyborg",
   "port": 3001,
+  "favicon": "public/images/logo.png",
   "dbsettings": {
     "user": "",
     "password": "",
