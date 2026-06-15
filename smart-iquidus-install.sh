@@ -328,12 +328,12 @@ server {
 
     location = /favicon.ico {
         alias /opt/smartcash3/explorer/public/images/logo.png;
-        add_header Content-Type image/png;
+        default_type image/png;
     }
 
     location = /explorer/favicon.ico {
         alias /opt/smartcash3/explorer/public/images/logo.png;
-        add_header Content-Type image/png;
+        default_type image/png;
     }
 
     location = /explorer {
