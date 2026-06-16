@@ -245,7 +245,7 @@ Type=oneshot
 WorkingDirectory=/opt/smartcash3/explorer
 ExecStart=/usr/bin/node scripts/sync-tip.js 250
 ExecStartPost=/usr/bin/node scripts/peers.js
-ExecStartPost=-/usr/bin/node -e "const{exec}=require('child_process'),m=require('mongodb').MongoClient;exec('/usr/local/bin/smartcash-cli -conf=/etc/smartcash3/smartcash.conf -datadir=/var/lib/smartcash3 gettxoutsetinfo 2>/dev/null',{timeout:60000},(e,o)=>{let s=3167797400;try{s=JSON.parse(o).total_amount}catch(ex){}m.connect('mongodb://127.0.0.1:27017/smartcash3',(e,c)=>{c.db().collection('coinstats').updateOne({},{\$set:{supply:s}},{upsert:true},()=>{c.close()})})})"
+ExecStartPost=-/usr/bin/node scripts/seed-supply.js
 TimeoutStartSec=5min
 EOF
 
