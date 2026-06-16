@@ -368,7 +368,7 @@ EOF
 
 ln -sf /etc/nginx/sites-available/smart-iquidus-explorer /etc/nginx/sites-enabled/smart-iquidus-explorer
 rm -f /etc/nginx/sites-enabled/default
-nginx -t
+if [ -f /etc/nginx/sites-available/smart-iquidus-explorer ]; then nginx -t && systemctl restart nginx; else echo "WARNING: nginx config missing"; fi
 
 sed -i 's/^IPV6=yes/IPV6=no/' /etc/default/ufw
 ufw allow OpenSSH
