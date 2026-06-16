@@ -59,6 +59,9 @@ if ! command -v node >/dev/null 2>&1; then
   curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
   apt-get install -y nodejs
 fi
+if ! command -v npm >/dev/null 2>&1; then
+  apt-get install -y npm
+fi
 
 if ! command -v mongod >/dev/null 2>&1; then
   install -d -m 0755 /etc/apt/keyrings
