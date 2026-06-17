@@ -405,9 +405,9 @@ EOF
 
 curl -fsSL -o scripts/sync-tip.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/sync-tip.js 2>/dev/null || true
 echo "Seeding initial coin supply (retries until ready)..."
-curl -fsSL -o /tmp/seed-supply.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/seed-supply.js 2>/dev/null
+curl -fsSL -o "$EXPLORER_DIR/scripts/seed-supply.js" https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/seed-supply.js 2>/dev/null
 cd "$EXPLORER_DIR"
-node /tmp/seed-supply.js > /tmp/seed-supply.log 2>&1 &
+node "$EXPLORER_DIR/scripts/seed-supply.js" > /tmp/seed-supply.log 2>&1 &
 SEED_PID=$!
 
 echo "Indexing last 500 blocks for immediate data..."
