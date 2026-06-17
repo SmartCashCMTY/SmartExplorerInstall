@@ -59,6 +59,9 @@ if ! command -v node >/dev/null 2>&1; then
   curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
   apt-get install -y nodejs
 fi
+if ! command -v npm >/dev/null 2>&1; then
+  apt-get install -y npm
+fi
 
 if ! command -v mongod >/dev/null 2>&1; then
   install -d -m 0755 /etc/apt/keyrings
@@ -244,6 +247,8 @@ After=mongod.service smartcash3.service
 Type=oneshot
 WorkingDirectory=/opt/smartcash3/explorer
 ExecStart=/usr/bin/node scripts/sync-tip.js 250
+ExecStartPost=/usr/bin/node scripts/peers.js
+ExecStartPost=-/usr/bin/node scripts/seed-supply.js
 TimeoutStartSec=5min
 EOF
 
@@ -366,7 +371,7 @@ EOF
 
 ln -sf /etc/nginx/sites-available/smart-iquidus-explorer /etc/nginx/sites-enabled/smart-iquidus-explorer
 rm -f /etc/nginx/sites-enabled/default
-nginx -t
+if [ -f /etc/nginx/sites-available/smart-iquidus-explorer ]; then nginx -t && systemctl restart nginx; else echo "WARNING: nginx config missing"; fi
 
 sed -i 's/^IPV6=yes/IPV6=no/' /etc/default/ufw
 ufw allow OpenSSH
