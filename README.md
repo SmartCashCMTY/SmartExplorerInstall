@@ -50,7 +50,6 @@ sudo bash ./SmartInstallExplorer.sh
 
 ## Credits
 Original SmartCash Project: https://github.com/smartcash
-Original iquidus explorer https://github.com/iquidus/explorer
 This repository is an Update 3.0.0 based on the open-source work of the SmartCash project.
 All rights to original components, trademarks, logos, source code, and documentation remain with their respective owners.
 The original creator and relevant open-source contributors should be acknowledged appropriately.
