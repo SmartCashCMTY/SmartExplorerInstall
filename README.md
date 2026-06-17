@@ -18,7 +18,7 @@ sudo bash ./SmartInstallExplorer.sh
 - Ubuntu Server 24.04 LTS
 - Public IPv4 address
 - 2 vCPU
-- 2 GB RAM or better
+- 4 GB RAM or better
 - 30 GB SSD or more
 
 ## Hardware Requirements
