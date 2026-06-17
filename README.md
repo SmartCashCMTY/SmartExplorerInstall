@@ -55,14 +55,32 @@ All rights to original components, trademarks, logos, source code, and documenta
 The original creator and relevant open-source contributors should be acknowledged appropriately.
 
 ## License
-SmartCash Core components are generally released under MIT. Iquidus Explorer and third-party components keep their own licenses.
-Please check the original project license.
+SmartCash Core is released under the MIT License. See COPYING for details.
+Third-party components and libraries retain their respective licenses.
+If the license of any component cannot be clearly determined, please check the original project.
 
 ## Disclaimer
-Use at your own risk. No warranty is provided for functionality, availability, or security. No liability is accepted for direct or indirect damages, data loss, wallet loss, lost private keys, misconfiguration, network issues, blockchain issues, software bugs, or security vulnerabilities.
+This software is provided "as is", without warranty of any kind, express or implied. Use at your own risk.
+The authors and contributors assume no liability for:
+- Direct or indirect damages
+- Data loss or corruption
+- Financial losses
+- Loss of access to wallets or private keys
+- Misconfiguration or operator error
+- Network or blockchain issues
+- Software bugs or security vulnerabilities
 
 ## Cryptocurrency Risks
-Cryptocurrencies are high-risk digital assets. Losses, including total loss, are possible. Node operation and staking-related workflows may fail or behave unexpectedly. You are responsible for wallet backups, local law compliance, and tax obligations.
+Cryptocurrencies involve substantial risk of loss and are not suitable for all investors.
+- The value of digital assets can be highly volatile and may result in total loss
+- Node operation, staking, and mining carry technical and financial risks
+- You are solely responsible for securing your wallets and private keys
+- You are responsible for compliance with local laws and tax obligations
+- Past performance does not guarantee future results
 
 ## Legal Notice
-Use this software in accordance with the laws and regulations that apply in your jurisdiction. You are responsible for regulatory, tax, and legal compliance in your country. No legal, tax, or financial advice is provided.
+Use of this software must comply with all applicable local, national, and international laws and regulations.
+- You are responsible for regulatory, tax, and legal compliance in your jurisdiction
+- No legal, tax, or financial advice is provided
+- This software does not constitute an offer or solicitation of any kind
+- All trademarks and logos remain the property of their respective owners
