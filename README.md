@@ -45,6 +45,12 @@ sudo bash ./SmartInstallExplorer.sh
 - MongoDB database dump
 
 ## Security
+
+Automatic security updates can be enabled with:
+```bash
+sudo bash auto-updates-setup.sh
+```
+This configures unattended-upgrades every 14 days with automatic reboot if needed.
 - Keep RPC credentials private
 - Never commit secrets, seed phrases, or API keys
 
