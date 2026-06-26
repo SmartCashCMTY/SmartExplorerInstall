@@ -184,7 +184,7 @@ cat >settings.json <<EOF
   "locale": "locale/en.json",
   "display": {
     "api": true,
-    "markets": false,
+    "markets": true,
     "richlist": false,
     "smartnodes": true,
     "movement": true,
@@ -202,8 +202,8 @@ cat >settings.json <<EOF
   "markets": {
     "coin": "SMART",
     "exchange": "USD",
-    "enabled": [],
-    "default": ""
+    "enabled": ["coingecko"],
+    "default": "coingecko"
   },
   "nethash": "getnetworkhashps",
   "nethash_units": "H"
