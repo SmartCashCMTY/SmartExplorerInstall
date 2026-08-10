@@ -6,6 +6,10 @@ CORE_RELEASE_BASE="https://github.com/SmartCashCMTY/Node-Client-Wallet/releases/
 CORE_ARCHIVE="smartcash3-3.0.0-x86_64-linux-gnu.tar.gz"
 CORE_SHA256="d53c8195768490808c88d178cfb387102b8e69ab452e4c7baddf9af5c44993eb"
 EXPLORER_REPO="https://github.com/iquidus/explorer.git"
+# Pin Iquidus Explorer to a known good commit for license compliance.
+# The upstream project does not publish versioned releases. Replace this
+# commit hash with a verified known-good commit after reviewing the repo.
+IQUIDUS_COMMIT="REPLACE_WITH_KNOWN_GOOD_COMMIT"
 INSTALL_ROOT="/opt/smartcash3"
 EXPLORER_DIR="/opt/smartcash3/explorer"
 DATADIR="/var/lib/smartcash3"
@@ -142,6 +146,7 @@ systemctl enable --now smartcash3
 
 if [[ ! -d "$EXPLORER_DIR/.git" ]]; then
   git clone "$EXPLORER_REPO" "$EXPLORER_DIR"
+  cd "$EXPLORER_DIR" && git checkout "$IQUIDUS_COMMIT"
 fi
 
 cd "$EXPLORER_DIR"
