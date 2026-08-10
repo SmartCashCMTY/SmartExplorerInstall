@@ -150,20 +150,31 @@ npm install --production
 
 # WARNING: The following curl commands download SmartCash-specific overlay files
 # from the SmartExplorer repository. These files should be versioned and their
-# integrity verified (e.g. via SHA256 or a pinned git tag). The variable
-# SMART_EXPLORER_VERSION controls which tag is used. Ensure this tag exists
-# and matches the intended release before deploying.
-SMART_EXPLORER_VERSION="v3.0.0"
-SMART_EXPLORER_BASE="https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/${SMART_EXPLORER_VERSION}"
+# integrity verified (e.g. via SHA256 or a pinned git commit). The variable
+# SMART_EXPLORER_COMMIT controls which commit is used. Ensure this commit
+# exists and matches the intended release before deploying.
+SMART_EXPLORER_COMMIT="1d39f32ed1f7d003717af4d13c586c99df5ee6e6"
+SMART_EXPLORER_BASE="https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/${SMART_EXPLORER_COMMIT}"
 echo "Downloading SmartCash logo..."
-curl -fsSL -o public/images/logo.png "${SMART_EXPLORER_BASE}/public/images/logo.png" 2>/dev/null || true
-curl -fsSL -o public/favicon.ico "${SMART_EXPLORER_BASE}/public/favicon.ico" 2>/dev/null || true
+curl -fsSL -o public/images/logo.png "${SMART_EXPLORER_BASE}/public/images/logo.png"
+curl -fsSL -o public/favicon.ico "${SMART_EXPLORER_BASE}/public/favicon.ico"
 
 echo "Downloading custom layout, lib, routes and SmartNodes files..."
-curl -fsSL -o views/layout.pug "${SMART_EXPLORER_BASE}/views/layout.pug" 2>/dev/null || true
-curl -fsSL -o views/smartnodes.pug "${SMART_EXPLORER_BASE}/views/smartnodes.pug" 2>/dev/null || true
-curl -fsSL -o lib/explorer.js "${SMART_EXPLORER_BASE}/lib/explorer.js" 2>/dev/null || true
-curl -fsSL -o routes/index.js "${SMART_EXPLORER_BASE}/routes/index.js" 2>/dev/null || true
+curl -fsSL -o views/layout.pug "${SMART_EXPLORER_BASE}/views/layout.pug"
+curl -fsSL -o views/smartnodes.pug "${SMART_EXPLORER_BASE}/views/smartnodes.pug"
+curl -fsSL -o lib/explorer.js "${SMART_EXPLORER_BASE}/lib/explorer.js"
+curl -fsSL -o routes/index.js "${SMART_EXPLORER_BASE}/routes/index.js"
+
+echo "Verifying overlay file integrity..."
+cat >"$tmpdir/overlay_checksums" <<'CHKEOF'
+58ca2ca2b361d81b4d68d6f4a1c026dc25362cd9d6cd477588e8f819dcfd3552  public/images/logo.png
+b0b6f466ef8121d3eff6b70d1a29ab446c00f6fe0c3d6b36b96f74af1dc753a6  public/favicon.ico
+9252c5914da6640f0068f3952181304c7b9b505e2fbacaae89e86c618c554f74  views/layout.pug
+a3d4553fed1848276f98713c4ebc79938f88ebfa741c7e0eec11568ad38dddc3  views/smartnodes.pug
+9b1937fbcabc9dbf623c378f4955c0ad680e8c673e27b7f4717d971f00001078  lib/explorer.js
+ce43784a31124da43a963d93cb719fb462d79d975002065953dfc1f08438433b  routes/index.js
+CHKEOF
+sha256sum -c "$tmpdir/overlay_checksums" || { echo "ERROR: Overlay file checksum mismatch! Installation aborted." >&2; exit 1; }
 
 
 cat >settings.json <<EOF
@@ -416,7 +427,7 @@ Open the Explorer:
   http://YOUR_SERVER_IP/explorer/
 EOF
 
-curl -fsSL -o scripts/sync-tip.js "${SMART_EXPLORER_BASE}/scripts/sync-tip.js" 2>/dev/null || true
+curl -fsSL -o scripts/sync-tip.js "${SMART_EXPLORER_BASE}/scripts/sync-tip.js"
 echo "Seeding initial coin supply (retries until ready)..."
 curl -fsSL -o "$EXPLORER_DIR/scripts/seed-supply.js" "${SMART_EXPLORER_BASE}/scripts/seed-supply.js" 2>/dev/null
 cd "$EXPLORER_DIR"
