@@ -20,11 +20,13 @@ themselves are MIT-licensed by SmartCashCMTY.
 
 - **Project:** Iquidus Explorer
 - **Upstream:** https://github.com/iquidus/explorer
+- **Pinned commit:** 064134c760fbf09db207449c01635202a0e7d1d1
 - **License:** BSD 3-Clause
 - **Copyright:** Copyright (c) 2015 Iquidus Technology; Copyright (c) 2015 Luke Williams
 - **No-endorsement clause:** The BSD 3-Clause license prohibits use of Iquidus or contributor names for endorsement of derivative products without specific prior written permission.
-- **Installation:** Cloned via git from upstream at install time
+- **Installation:** Cloned via git from upstream at install time (`git clone` + `git checkout <commit>`)
 - **Dependencies:** npm packages installed via `npm install --production`
+- **Reproducibility note:** The upstream Iquidus repository does not include a package-lock.json. Dependencies are resolved from package.json version ranges on each install. This means builds are not fully reproducible across different points in time. The Iquidus commit is pinned to mitigate code changes, but npm dependency resolution may vary. Use of Node.js 20.x LTS and a documented npm version is recommended for consistent builds.
 
 ### MongoDB 8.0
 
