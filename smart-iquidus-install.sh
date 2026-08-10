@@ -7,9 +7,9 @@ CORE_ARCHIVE="smartcash3-3.0.0-x86_64-linux-gnu.tar.gz"
 CORE_SHA256="d53c8195768490808c88d178cfb387102b8e69ab452e4c7baddf9af5c44993eb"
 EXPLORER_REPO="https://github.com/iquidus/explorer.git"
 # Pin Iquidus Explorer to a known good commit for license compliance.
-# The upstream project does not publish versioned releases. Replace this
-# commit hash with a verified known-good commit after reviewing the repo.
-IQUIDUS_COMMIT="REPLACE_WITH_KNOWN_GOOD_COMMIT"
+# The upstream project does not publish versioned releases. This commit
+# is the latest on the master branch at the time of this release.
+IQUIDUS_COMMIT="064134c760fbf09db207449c01635202a0e7d1d1"
 INSTALL_ROOT="/opt/smartcash3"
 EXPLORER_DIR="/opt/smartcash3/explorer"
 DATADIR="/var/lib/smartcash3"
@@ -60,11 +60,7 @@ if ! swapon --show | grep -q '^'; then
 fi
 
 if ! command -v node >/dev/null 2>&1; then
-  curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-  apt-get install -y nodejs
-fi
-if ! command -v npm >/dev/null 2>&1; then
-  apt-get install -y npm
+  apt-get install -y nodejs npm
 fi
 
 if ! command -v mongod >/dev/null 2>&1; then
@@ -152,15 +148,22 @@ fi
 cd "$EXPLORER_DIR"
 npm install --production
 
+# WARNING: The following curl commands download SmartCash-specific overlay files
+# from the SmartExplorer repository. These files should be versioned and their
+# integrity verified (e.g. via SHA256 or a pinned git tag). The variable
+# SMART_EXPLORER_VERSION controls which tag is used. Ensure this tag exists
+# and matches the intended release before deploying.
+SMART_EXPLORER_VERSION="v3.0.0"
+SMART_EXPLORER_BASE="https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/${SMART_EXPLORER_VERSION}"
 echo "Downloading SmartCash logo..."
-curl -fsSL -o public/images/logo.png https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/public/images/logo.png 2>/dev/null || true
-curl -fsSL -o public/favicon.ico https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/public/favicon.ico 2>/dev/null || true
+curl -fsSL -o public/images/logo.png "${SMART_EXPLORER_BASE}/public/images/logo.png" 2>/dev/null || true
+curl -fsSL -o public/favicon.ico "${SMART_EXPLORER_BASE}/public/favicon.ico" 2>/dev/null || true
 
 echo "Downloading custom layout, lib, routes and SmartNodes files..."
-curl -fsSL -o views/layout.pug https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/views/layout.pug 2>/dev/null || true
-curl -fsSL -o views/smartnodes.pug https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/views/smartnodes.pug 2>/dev/null || true
-curl -fsSL -o lib/explorer.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/lib/explorer.js 2>/dev/null || true
-curl -fsSL -o routes/index.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/routes/index.js 2>/dev/null || true
+curl -fsSL -o views/layout.pug "${SMART_EXPLORER_BASE}/views/layout.pug" 2>/dev/null || true
+curl -fsSL -o views/smartnodes.pug "${SMART_EXPLORER_BASE}/views/smartnodes.pug" 2>/dev/null || true
+curl -fsSL -o lib/explorer.js "${SMART_EXPLORER_BASE}/lib/explorer.js" 2>/dev/null || true
+curl -fsSL -o routes/index.js "${SMART_EXPLORER_BASE}/routes/index.js" 2>/dev/null || true
 
 
 cat >settings.json <<EOF
@@ -413,9 +416,9 @@ Open the Explorer:
   http://YOUR_SERVER_IP/explorer/
 EOF
 
-curl -fsSL -o scripts/sync-tip.js https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/sync-tip.js 2>/dev/null || true
+curl -fsSL -o scripts/sync-tip.js "${SMART_EXPLORER_BASE}/scripts/sync-tip.js" 2>/dev/null || true
 echo "Seeding initial coin supply (retries until ready)..."
-curl -fsSL -o "$EXPLORER_DIR/scripts/seed-supply.js" https://raw.githubusercontent.com/SmartCashCMTY/SmartExplorer/main/scripts/seed-supply.js 2>/dev/null
+curl -fsSL -o "$EXPLORER_DIR/scripts/seed-supply.js" "${SMART_EXPLORER_BASE}/scripts/seed-supply.js" 2>/dev/null
 cd "$EXPLORER_DIR"
 node "$EXPLORER_DIR/scripts/seed-supply.js" > /tmp/seed-supply.log 2>&1 &
 SEED_PID=$!

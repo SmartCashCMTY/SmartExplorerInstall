@@ -20,8 +20,9 @@ themselves are MIT-licensed by SmartCashCMTY.
 
 - **Project:** Iquidus Explorer
 - **Upstream:** https://github.com/iquidus/explorer
-- **License:** MIT
-- **Copyright:** Copyright (c) 2015 Iquidus Technology / Luke Williams
+- **License:** BSD 3-Clause
+- **Copyright:** Copyright (c) 2015 Iquidus Technology; Copyright (c) 2015 Luke Williams
+- **No-endorsement clause:** The BSD 3-Clause license prohibits use of Iquidus or contributor names for endorsement of derivative products without specific prior written permission.
 - **Installation:** Cloned via git from upstream at install time
 - **Dependencies:** npm packages installed via `npm install --production`
 
