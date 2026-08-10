@@ -61,10 +61,15 @@ All rights to original components, trademarks, logos, source code, and documenta
 The original creator and relevant open-source contributors should be acknowledged appropriately.
 
 ## License
-SmartCash Core is released under the MIT License.
-See https://github.com/SmartCashCMTY/Core-Source-Repo for the full license text.
-The installed Iquidus Explorer is Copyright (c) 2015 Iquidus Technology / Luke Williams.
-See https://github.com/iquidus/explorer for the Iquidus Explorer license terms.
+SmartCashCMTY installer and configuration code is released under the MIT License.
+See [LICENSE](LICENSE) for details.
+
+The software installed by this installer (SmartCash Core, Iquidus Explorer,
+MongoDB, Node.js, Nginx, and others) each retain their own licenses.
+See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for a complete list.
+
+SmartCash Core: https://github.com/SmartCashCMTY/Core-Source-Repo (MIT License)
+Iquidus Explorer: https://github.com/iquidus/explorer (Copyright (c) 2015 Iquidus Technology / Luke Williams)
 ## Disclaimer
 This software is provided "as is", without warranty of any kind, express or implied. Use at your own risk.
 The authors and contributors assume no liability for:
